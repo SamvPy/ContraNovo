@@ -38,11 +38,11 @@ class DbDataset(Dataset):
                     new_idx = idx
                 else:
                     new_idx = idx - self.offset[i-1]
-                mz_array, int_array, precursor_mz, precursor_charge, peptide = self.indexs[i][new_idx]
+                (mz_array, int_array, precursor_mz, precursor_charge, peptide), scan_id = self.indexs[i][new_idx]
                 spectrum = self._process_peaks(np.array(mz_array), np.array(int_array), precursor_mz, precursor_charge)
 
         # print(peptide)
-        return spectrum, precursor_mz, precursor_charge, peptide.replace("pyro-","-17.027")
+        return spectrum, precursor_mz, precursor_charge, peptide.replace("pyro-","-17.027"), scan_id
 
     def _process_peaks(
         self,

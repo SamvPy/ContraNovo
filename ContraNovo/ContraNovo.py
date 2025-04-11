@@ -8,6 +8,7 @@ import shutil
 import sys
 import warnings
 from typing import Optional, Tuple
+from pathlib import Path
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -22,7 +23,7 @@ from pytorch_lightning.lite import LightningLite
 
 from . import utils
 from .denovo import model_runner
-
+from .data import ms_io
 
 logger = logging.getLogger("ContraNovo")
 
@@ -193,13 +194,17 @@ def main(
 
     # Run ContraNovo in the specified mode.
     if mode == "denovo":
+
+        # BUG Writer was initiated wrongly. Fixed it from https://github.com/BEAM-Labs/ContraNovo/issues/3 using casanovo code
         logger.info("Predict peptide sequences with ContraNovo.")
-        writer = None
-        # writer.set_metadata(
-        #     config, peak_path=peak_path, model=model, config_filename=config_fn
-        # )
+        writer = ms_io.MztabWriter(Path(output).with_suffix(".mztab"))
+        writer.set_metadata(
+            config, peak_path=peak_path, model=model, config_filename=config_fn
+        )
+        writer.set_ms_run([peak_path])
         model_runner.predict(peak_path, model, config, writer)
         writer.save()
+
     elif mode == "eval":
         logger.info("Evaluate a trained ContraNovo model.")
         model_runner.evaluate(peak_path, model, config)

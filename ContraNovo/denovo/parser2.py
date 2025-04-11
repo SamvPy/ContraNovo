@@ -283,7 +283,7 @@ class MgfParser(BaseParser):
             self.intensity_arrays.append(list(spectrum["intensity array"]))
             self.precursor_mz.append(precursor_mz)
             self.precursor_charge.append(precursor_charge)
-            self.scan_id.append(self._counter)
+            self.scan_id.append(spectrum["params"]["scans"])
 
         self._counter += 1
 

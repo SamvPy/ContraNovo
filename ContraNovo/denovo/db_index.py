@@ -80,7 +80,8 @@ class DB_Index:
             #remember to round the charge 
             #precusor m/z, precusor charge, peaks number, m/z1, .... , m/zn, i_1, ...., i_n 
             collection_data = {"precursor_mz": parser.precursor_mz[i], "precursor_charge": parser.precursor_charge[i],
-                               "mz_array": parser.mz_arrays[i], "intensity_array": parser.intensity_arrays[i]}
+                               "mz_array": parser.mz_arrays[i], "intensity_array": parser.intensity_arrays[i],
+                               "scan_id": parser.scan_id[i]}
             
             collection_data["pep"] =  parser.annotations[i]
             # print(parser.annotations[i])
@@ -98,7 +99,9 @@ class DB_Index:
         data= pickle.loads(buffer)
         pep = data["pep"]
         out = (data["mz_array"], data["intensity_array"],  data["precursor_mz"], data["precursor_charge"], pep)
-        return out
+        scan_id = data["scan_id"]
+        return out, scan_id
+
     def __len__ (self):
         return self.n_spectra
            
